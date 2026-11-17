@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>Install Forge 0.1.5</title>
-<meta name="description" content="Download and install Forge 0.1.5 on one Linux server with a single command.">
+<title>Install Forge 0.1.6</title>
+<meta name="description" content="Download and install Forge 0.1.6 on one Linux server with a single command.">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -114,26 +114,10 @@
 <main>
   <header>
     <img class="logo" src="forge-logo.webp" alt="Forge" width="432" height="154">
-    <div class="eyebrow">VERSION 0.1.5</div>
+    <div class="eyebrow">VERSION 0.1.6</div>
     <h1>Install Forge on your server</h1>
-    <p class="lead">One signed file installs Forge on a Linux server in a few minutes. It checks the server before it changes anything.</p>
+    <p class="lead">A small installer and a signed release package set up Forge on a Linux server in a few minutes. The installer checks the package and the server before it changes anything.</p>
   </header>
-
-  <section id="downloads">
-    <h2>Downloads</h2>
-    <p>You need these three files.</p>
-    <div class="downloads">
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh"><strong>forge-install-0.1.5.sh</strong><span>Installer, about 810 MB</span></a>
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh.sig"><strong>forge-install-0.1.5.sh.sig</strong><span>Signature</span></a>
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/fc.pub"><strong>fc.pub</strong><span>Forge public key</span></a>
-    </div>
-    <h3>Optional: full release package</h3>
-    <p>Source, SBOMs, scan reports and Helm charts, for reviews. The installer already includes it.</p>
-    <div class="downloads">
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-stack-0.1.5.tar"><strong>forge-stack-0.1.5.tar</strong><span>Release package, about 830 MB</span></a>
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-stack-0.1.5.tar.sig"><strong>forge-stack-0.1.5.tar.sig</strong><span>Signature</span></a>
-    </div>
-  </section>
 
   <section id="requirements">
     <h2>What the server needs</h2>
@@ -141,7 +125,7 @@
       <li>Linux (amd64 or arm64) with systemd and <code>sudo</code></li>
       <li>Docker with Compose v2, or Podman 5+ (on Ubuntu 22.04, use Docker)</li>
       <li><code>openssl</code> and <code>curl</code></li>
-      <li>3 GB free in <code>/opt/forge</code>, 2 GB in <code>/var/tmp</code>, 1.5 GB of memory, plus what the model needs</li>
+      <li>3 GB free in <code>/opt/forge</code>, 300 MB in <code>/var/tmp</code>, 1.5 GB of memory, plus what the model needs</li>
       <li>A local ext4 or XFS disk (not NFS)</li>
       <li>Ports 8080, 8081 and 8084 free and open to your network</li>
       <li>Clock synced (NTP)</li>
@@ -161,40 +145,44 @@
   <section id="install">
     <h2><span class="num">1</span>Put the files on the server</h2>
 
+    <p>You need five files, in one folder on the server.</p>
+
     <div class="option">
       <h3><span class="tag">A</span>Download in your browser, then copy</h3>
       <div class="downloads">
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh" download><strong>forge-install-0.1.5.sh</strong><span>Download</span></a>
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh.sig" download><strong>forge-install-0.1.5.sh.sig</strong><span>Download</span></a>
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/fc.pub" download><strong>fc.pub</strong><span>Download</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/forge-install-0.1.6.sh" download><strong>forge-install-0.1.6.sh</strong><span>Installer</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/forge-install-0.1.6.sh.sig" download><strong>forge-install-0.1.6.sh.sig</strong><span>Its signature</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/forge-stack-0.1.6.tar" download><strong>forge-stack-0.1.6.tar</strong><span>Release package, about 830 MB</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/forge-stack-0.1.6.tar.sig" download><strong>forge-stack-0.1.6.tar.sig</strong><span>Its signature</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/fc.pub" download><strong>fc.pub</strong><span>Forge public key</span></a>
       </div>
       <p>If the browser warns, choose <strong>Keep</strong>. Copy the files to the server with WinSCP, FileZilla, or from a terminal in your Downloads folder:</p>
-      <div class="term"><div class="term-bar"><span>your computer</span><button class="copy" type="button">Copy</button></div><pre><code>scp forge-install-0.1.5.sh forge-install-0.1.5.sh.sig fc.pub \
-    admin@your-server:</code></pre></div>
+      <div class="term"><div class="term-bar"><span>your computer</span><button class="copy" type="button">Copy</button></div><pre><code>scp forge-install-0.1.6.sh forge-install-0.1.6.sh.sig forge-stack-0.1.6.tar forge-stack-0.1.6.tar.sig fc.pub admin@your-server:</code></pre></div>
       <p>Replace <code>admin@your-server</code> with your login.</p>
     </div>
 
     <div class="option">
       <h3><span class="tag">B</span>Download on the server (needs internet)</h3>
-      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.5.sh
-U=https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5
-curl -fL -O $U/$F -O $U/$F.sig -O $U/fc.pub</code></pre></div>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>U=https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6
+for f in forge-install-0.1.6.sh forge-install-0.1.6.sh.sig forge-stack-0.1.6.tar forge-stack-0.1.6.tar.sig fc.pub; do
+  curl -fL -O $U/$f
+done</code></pre></div>
     </div>
   </section>
 
   <section>
     <h2><span class="num">2</span>Check the signature <span class="optional">optional</span></h2>
     <p>Recommended. In the folder with the files:</p>
-    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.5.sh
+    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.6.sh
 base64 -d $F.sig &gt; forge-install.sig
 openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre></div>
-    <p>It must print <code>Verified OK</code>. If not, contact us. Check the optional release package the same way.</p>
+    <p>It must print <code>Verified OK</code>. If not, contact us. The installer checks the release package's signature itself.</p>
   </section>
 
   <section>
     <h2><span class="num">3</span>Run the installer</h2>
-    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.5.sh</code></pre></div>
-    <p>It checks the server, then asks:</p>
+    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.6.sh</code></pre></div>
+    <p>It checks the package's signature and the server, then asks the questions below. If the package is in another folder, it asks for its path.</p>
     <ol class="asks">
       <li><strong>Admin username and password</strong> (14+ characters)</li>
       <li><strong>Your own certificate?</strong> Answer <code>n</code> and Forge creates one. Add any other name or IP apps use, such as a public IP.</li>
@@ -231,6 +219,63 @@ openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre>
     </ol>
   </section>
 
+  <section id="chat">
+    <h2><span class="num">6</span>Add chat to your website <span class="optional">optional</span></h2>
+    <p>Forge already serves a chat window. One script tag adds it to any website, such as plain HTML, Angular or WordPress. Answers stream as they are written, and users see when a tool runs and approve tools that change data.</p>
+    <ol class="asks">
+      <li><strong>Allow your website.</strong> Browsers can reach the chat API only from sites you list. On the server, set <code>O</code> to your site's address (<code>https://host</code> or <code>https://host:port</code>, no path), then run:
+        <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>O=https://intranet.example.com
+for f in /opt/forge/stack/config/orchestrator/orchestrator.*.yaml; do
+  sudo grep -q '^cors:' "$f" || printf 'cors:\n  allowed_origins:\n' | sudo tee -a "$f" &gt;/dev/null
+  sudo grep -qx "    - $O" "$f" || sudo sed -i "/^  allowed_origins:/a\    - $O" "$f"
+done
+sudo systemctl restart forge-stack</code></pre></div>
+        <span class="sub">Run it again for each extra site. Upgrades and <code>forge setup</code> keep the list.</span></li>
+      <li><strong>Make browsers trust the chat API.</strong> Your users' browsers must trust its certificate. Either install <code class="path">/opt/forge/<wbr>stack/<wbr>certs/<wbr>forge-ca.pem</code> on their computers (for example by group policy), or use a certificate they already trust: <code>sudo forge setup https</code>.</li>
+      <li><strong>Add the tag</strong> to your pages, with your server's address:
+        <div class="term"><div class="term-bar"><span>your website</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;script src="https://forge.example.com:8080/static/fc-chat.js"
+  data-endpoint="https://forge.example.com:8080"
+  data-token="API-KEY" defer&gt;&lt;/script&gt;</code></pre></div>
+        <span class="sub">Replace <code>API-KEY</code> with the chat API key (<code>sudo cat /opt/forge/stack/secrets/orch-api.key</code>). A chat button appears at the bottom right.</span>
+        <span class="sub">If the site has a Content Security Policy, add the Forge address to <code>script-src</code> and <code>connect-src</code>.</span></li>
+    </ol>
+    <div class="note">Anyone who can open the page can read the API key in it and use the chat API. Put it only on pages that just your staff can open. For other pages, sign users in as shown below.</div>
+
+    <h3>Sign users in with your SSO</h3>
+    <p>The chat then uses each user's own token, and their roles decide which tools they can use. In each file from step 1, replace the <code>auth:</code> block with your identity provider's details, then restart as in step 1:</p>
+    <div class="term"><div class="term-bar"><span>orchestrator.*.yaml</span><button class="copy" type="button">Copy</button></div><pre><code>auth:
+  mode: jwt
+  jwt:
+    issuer: https://sso.example.com
+    audience: forge
+    jwks_url: https://sso.example.com/.well-known/jwks.json
+    roles_claim: roles</code></pre></div>
+    <p>Then load the chat with a function that returns the signed-in user's token, instead of <code>data-token</code>:</p>
+    <div class="term"><div class="term-bar"><span>your website</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;script src="https://forge.example.com:8080/static/fc-chat.js"&gt;&lt;/script&gt;
+&lt;script type="module"&gt;
+  FCChat.mount({
+    endpoint: "https://forge.example.com:8080",
+    token: () =&gt; myApp.getAccessToken()
+  });
+&lt;/script&gt;</code></pre></div>
+    <div class="note">With SSO on, the API key stops working. Other apps that call the chat API must then send a user token too.</div>
+
+    <h3>More options</h3>
+    <div class="table-wrap"><table>
+      <tr><th>To</th><th>Add to the tag</th></tr>
+      <tr><td>Show the chat inside an element instead of as a button</td><td><code>data-target="#help"</code></td></tr>
+      <tr><td>Set the title and first message</td><td><code>data-title="…"</code> <code>data-welcome-message="…"</code></td></tr>
+      <tr><td>Use your brand colour</td><td><code>data-theme-primary="#0055aa"</code></td></tr>
+    </table></div>
+    <p><strong>React apps</strong> can use the npm package instead. It is in the release package on the server. Publish it to your internal npm registry:</p>
+    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>tar -xf /opt/forge/release/forge-stack-0.1.5.tar --strip-components=2 \
+    forge-stack-0.1.5/products/forge-chat-0.1.0.tar
+tar -xf forge-chat-0.1.0.tar
+npm publish forge-chat-0.1.0/npm/forcecapacity-chat-0.1.0.tgz \
+    --registry https://npm.example.com/</code></pre></div>
+    <p>Then run <code>npm install @forcecapacity/chat</code> in your app and add <code>&lt;ForceCapacityChat endpoint="https://forge.example.com:8080" token={getToken} /&gt;</code>. <code>forge-chat-0.1.0/IMPORT.md</code> has the details.</p>
+  </section>
+
   <section id="later">
     <h2>Later</h2>
     <div class="table-wrap"><table>
@@ -243,7 +288,7 @@ openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre>
       <tr><td>Use Bitwarden</td><td><code>sudo forge setup bitwarden</code></td></tr>
       <tr><td>Upgrade</td><td><code>sudo forge upgrade forge-install-&lt;version&gt;.sh</code></td></tr>
       <tr><td>Uninstall, keeping data</td><td><code>sudo forge uninstall</code></td></tr>
-      <tr><td>Reinstall after that</td><td><code>sudo sh forge-install-0.1.5.sh</code></td></tr>
+      <tr><td>Reinstall after that</td><td><code>sudo sh forge-install-0.1.6.sh</code></td></tr>
       <tr><td>Delete everything</td><td><code>sudo /opt/forge/bin/forge uninstall --purge</code></td></tr>
     </table></div>
   </section>
@@ -255,7 +300,7 @@ openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre>
     <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo forge doctor</code></pre></div>
   </section>
 
-  <footer>Forge 0.1.5</footer>
+  <footer>Forge 0.1.6</footer>
 </main>
 <script>
   document.querySelectorAll('.copy').forEach(function (button) {
