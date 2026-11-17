@@ -121,9 +121,15 @@
     <h2>Downloads</h2>
     <p>You need all three files. Step 1 below shows how to get them onto your server. The installer needs no internet access once it is there.</p>
     <div class="downloads">
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh"><strong>forge-install-0.1.5.sh</strong><span>The installer, about 810 MB</span></a>
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh"><strong>forge-install-0.1.5.sh</strong><span>The installer, about 810 MB. It includes the full release package.</span></a>
       <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh.sig"><strong>forge-install-0.1.5.sh.sig</strong><span>Its signature</span></a>
       <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/fc.pub"><strong>fc.pub</strong><span>The Forge public key, to check the signature</span></a>
+    </div>
+    <h3>Optional: the full release package on its own</h3>
+    <p>The installer already contains this package and saves it on the server, so you do not need it to install. Download it separately only if you want it outside the server, for example for a security review, or to install by hand.</p>
+    <div class="downloads">
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-stack-0.1.5.tar"><strong>forge-stack-0.1.5.tar</strong><span>The full release package, about 830 MB</span></a>
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-stack-0.1.5.tar.sig"><strong>forge-stack-0.1.5.tar.sig</strong><span>Its signature</span></a>
     </div>
   </section>
 
@@ -165,7 +171,7 @@
       <p>If the browser warns that a file is not commonly downloaded, choose <strong>Keep</strong>. Then copy the three files to the server with any file-transfer tool (WinSCP, FileZilla, Cyberduck), or from a terminal in your Downloads folder (macOS, Linux, and Windows PowerShell):</p>
       <div class="term"><div class="term-bar"><span>your computer</span><button class="copy" type="button">Copy</button></div><pre><code>scp forge-install-0.1.5.sh forge-install-0.1.5.sh.sig fc.pub \
     admin@your-server:</code></pre></div>
-      <p>Replace <code>admin@your-server</code> with your user and server. The files land in your home folder there.</p>
+      <p>Replace <code>admin@your-server</code> with your user and server. The files land in your home folder there. If you also downloaded the optional full release package, copy <code>forge-stack-0.1.5.tar</code> and <code>forge-stack-0.1.5.tar.sig</code> the same way.</p>
     </div>
 
     <div class="option">
@@ -174,6 +180,8 @@
       <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.5.sh
 U=https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5
 curl -fL -O $U/$F -O $U/$F.sig -O $U/fc.pub</code></pre></div>
+      <p>Only if you want the optional full release package on its own as well:</p>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>curl -fL -O $U/forge-stack-0.1.5.tar -O $U/forge-stack-0.1.5.tar.sig</code></pre></div>
     </div>
   </section>
 
@@ -184,6 +192,10 @@ curl -fL -O $U/$F -O $U/$F.sig -O $U/fc.pub</code></pre></div>
 base64 -d $F.sig &gt; forge-install.sig
 openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre></div>
     <p>It must print <code>Verified OK</code>. If it prints anything else, stop and contact us: the file is damaged or is not from Forge.</p>
+    <p>If you downloaded the optional full release package, check it the same way:</p>
+    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>P=forge-stack-0.1.5.tar
+base64 -d $P.sig &gt; forge-stack.sig
+openssl dgst -sha256 -verify fc.pub -signature forge-stack.sig $P</code></pre></div>
   </section>
 
   <section>
@@ -237,7 +249,7 @@ openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre>
     <p>The installer also saves the complete signed release to <code>/opt/forge/release/forge-stack-0.1.5.tar</code>: source code, SBOMs, vulnerability scan reports with their database, Helm charts, the command-line programs and the chat widget for your own apps. Forge does not need it to run; keep it for your records and security reviews. To look inside:</p>
     <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>mkdir -p ~/forge-release &amp;&amp; tar -xf /opt/forge/release/forge-stack-0.1.5.tar -C ~/forge-release
 cat ~/forge-release/forge-stack-0.1.5/IMPORT.md</code></pre></div>
-    <p>To verify the package and each product inside it, run sections 1 and 2 of <code>IMPORT.md</code> from <code>~/forge-release</code>, with <code>KEY</code> set to the <code>fc.pub</code> you downloaded in step 1. Its install-by-hand sections are not needed on a server set up with the installer.</p>
+    <p>It is the same file as the optional download <code>forge-stack-0.1.5.tar</code>. To verify the package and each product inside it, run sections 1 and 2 of <code>IMPORT.md</code> from <code>~/forge-release</code>, with <code>KEY</code> set to the <code>fc.pub</code> you downloaded in step 1. Its install-by-hand sections are not needed on a server set up with the installer.</p>
   </section>
 
   <section id="later">
