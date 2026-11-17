@@ -76,6 +76,7 @@
   th { color: var(--muted); font-weight: 500; font-size: 12px; }
   tr:last-child td { border-bottom: 0; }
   .table-wrap { overflow-x: auto; }
+  code.path { overflow-wrap: normal; word-break: keep-all; }
   td.addr code { white-space: nowrap; overflow-wrap: normal; }
   .term { background: var(--code); border: 1px solid var(--line-2); border-radius: 8px; margin: 12px 0; overflow: hidden; }
   .term-bar { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px 6px 12px;
@@ -95,6 +96,7 @@
   .option { background: var(--inset); border: 1px solid var(--line-2); border-radius: 10px; padding: 14px 16px; margin: 14px 0 0; }
   .option h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 14px; color: var(--fg); }
   .option .dl { background: var(--code); }
+  .optional { font-size: 11px; font-weight: 500; color: var(--muted); border: 1px solid var(--line-3); border-radius: 999px; padding: 1px 8px; }
   .tag { flex: none; width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--accent); color: var(--accent);
          display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
   ol.asks { padding-left: 20px; margin: 8px 0; color: var(--fg-soft); }
@@ -114,169 +116,143 @@
     <img class="logo" src="forge-logo.webp" alt="Forge" width="432" height="154">
     <div class="eyebrow">VERSION 0.1.5</div>
     <h1>Install Forge on your server</h1>
-    <p class="lead">One signed file installs the Control Station, the MCP Server and the Orchestrator on one Linux server. It takes a few minutes, and the installer checks your server before it changes anything.</p>
+    <p class="lead">One signed file installs Forge on a Linux server in a few minutes. It checks the server before it changes anything.</p>
   </header>
 
   <section id="downloads">
     <h2>Downloads</h2>
-    <p>You need all three files. Step 1 below shows how to get them onto your server. The installer needs no internet access once it is there.</p>
+    <p>You need these three files.</p>
     <div class="downloads">
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh"><strong>forge-install-0.1.5.sh</strong><span>The installer, about 810 MB. It includes the full release package.</span></a>
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh.sig"><strong>forge-install-0.1.5.sh.sig</strong><span>Its signature</span></a>
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/fc.pub"><strong>fc.pub</strong><span>The Forge public key, to check the signature</span></a>
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh"><strong>forge-install-0.1.5.sh</strong><span>Installer, about 810 MB</span></a>
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh.sig"><strong>forge-install-0.1.5.sh.sig</strong><span>Signature</span></a>
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/fc.pub"><strong>fc.pub</strong><span>Forge public key</span></a>
     </div>
-    <h3>Optional: the full release package on its own</h3>
-    <p>The installer already contains this package and saves it on the server, so you do not need it to install. Download it separately only if you want it outside the server, for example for a security review, or to install by hand.</p>
+    <h3>Optional: full release package</h3>
+    <p>Source, SBOMs, scan reports and Helm charts, for reviews. The installer already includes it.</p>
     <div class="downloads">
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-stack-0.1.5.tar"><strong>forge-stack-0.1.5.tar</strong><span>The full release package, about 830 MB</span></a>
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-stack-0.1.5.tar.sig"><strong>forge-stack-0.1.5.tar.sig</strong><span>Its signature</span></a>
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-stack-0.1.5.tar"><strong>forge-stack-0.1.5.tar</strong><span>Release package, about 830 MB</span></a>
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-stack-0.1.5.tar.sig"><strong>forge-stack-0.1.5.tar.sig</strong><span>Signature</span></a>
     </div>
   </section>
 
   <section id="requirements">
     <h2>What the server needs</h2>
     <ul class="check">
-      <li>Linux on amd64 (x86-64) or arm64, with systemd, and <code>sudo</code> access</li>
-      <li>Docker with Compose v2, <em>or</em> Podman 5 or later with <code>podman compose</code>. On Ubuntu 22.04 use Docker, because its Podman is too old.</li>
-      <li><code>openssl</code> and <code>curl</code>, which most servers already have</li>
-      <li>About 3 GB free disk for <code>/opt/forge</code>, 2 GB free in <code>/var/tmp</code> while the installer unpacks, and 1.5 GB free memory, plus what your model needs</li>
-      <li>A local ext4 or XFS disk for <code>/opt/forge</code> and for the container storage (not NFS)</li>
-      <li>Ports 8080, 8081 and 8084 free, and open to your internal network in the server's firewall if it has one. 9090 and 9091 are used locally only.</li>
-      <li>The clock synced over NTP</li>
+      <li>Linux (amd64 or arm64) with systemd and <code>sudo</code></li>
+      <li>Docker with Compose v2, or Podman 5+ (on Ubuntu 22.04, use Docker)</li>
+      <li><code>openssl</code> and <code>curl</code></li>
+      <li>3 GB free in <code>/opt/forge</code>, 2 GB in <code>/var/tmp</code>, 1.5 GB of memory, plus what the model needs</li>
+      <li>A local ext4 or XFS disk (not NFS)</li>
+      <li>Ports 8080, 8081 and 8084 free and open to your network</li>
+      <li>Clock synced (NTP)</li>
     </ul>
-    <h3>Only if you want them (you can also add them later)</h3>
+    <h3>Optional, can be added later</h3>
     <ul class="check opt">
-      <li><strong>A model</strong>, one of these:
-        <span class="sub">Forge runs it with Ollama: an Ollama image in your registry (<code>ollama/ollama:0.40.9</code>) and a folder with the GGUF file and a <code>Modelfile</code>.</span>
-        <span class="sub">Forge runs it with vLLM: a vLLM image (<code>vllm/vllm-openai:v0.32.0</code>), a model folder, and an NVIDIA GPU with the NVIDIA container toolkit.</span>
-        <span class="sub">You already run it: the address of your Ollama, vLLM or other OpenAI-compatible server, and its API key if it has one.</span></li>
-      <li><strong>Your private CA</strong> file, if your internal APIs or the model use certificates from it</li>
-      <li><strong>Your own certificate and key</strong> for the chat API. Without them, Forge creates its own.</li>
-      <li><strong>A Bitwarden or Vaultwarden server</strong>, if your APIs keep their secrets there</li>
+      <li><strong>A model</strong>, one of:
+        <span class="sub">Ollama image (<code>ollama/ollama:0.40.9</code>) and a folder with the GGUF file and its <code>Modelfile</code></span>
+        <span class="sub">vLLM image (<code>vllm/vllm-openai:v0.32.0</code>), a model folder and an NVIDIA GPU</span>
+        <span class="sub">The address of a model server you already run</span></li>
+      <li><strong>Your private CA</strong> file</li>
+      <li><strong>Your own certificate and key</strong> (otherwise Forge creates one)</li>
+      <li><strong>A Bitwarden or Vaultwarden server</strong></li>
     </ul>
   </section>
 
   <section id="install">
     <h2><span class="num">1</span>Put the files on the server</h2>
-    <p>Use either way. Both end with the three files in one folder on the server.</p>
 
     <div class="option">
-      <h3><span class="tag">A</span>Download in your browser, then copy to the server</h3>
-      <p>Click each file to save it to your computer:</p>
+      <h3><span class="tag">A</span>Download in your browser, then copy</h3>
       <div class="downloads">
         <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh" download><strong>forge-install-0.1.5.sh</strong><span>Download</span></a>
         <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/forge-install-0.1.5.sh.sig" download><strong>forge-install-0.1.5.sh.sig</strong><span>Download</span></a>
         <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5/fc.pub" download><strong>fc.pub</strong><span>Download</span></a>
       </div>
-      <p>If the browser warns that a file is not commonly downloaded, choose <strong>Keep</strong>. Then copy the three files to the server with any file-transfer tool (WinSCP, FileZilla, Cyberduck), or from a terminal in your Downloads folder (macOS, Linux, and Windows PowerShell):</p>
+      <p>If the browser warns, choose <strong>Keep</strong>. Copy the files to the server with WinSCP, FileZilla, or from a terminal in your Downloads folder:</p>
       <div class="term"><div class="term-bar"><span>your computer</span><button class="copy" type="button">Copy</button></div><pre><code>scp forge-install-0.1.5.sh forge-install-0.1.5.sh.sig fc.pub \
     admin@your-server:</code></pre></div>
-      <p>Replace <code>admin@your-server</code> with your user and server. The files land in your home folder there. If you also downloaded the optional full release package, copy <code>forge-stack-0.1.5.tar</code> and <code>forge-stack-0.1.5.tar.sig</code> the same way.</p>
+      <p>Replace <code>admin@your-server</code> with your login.</p>
     </div>
 
     <div class="option">
-      <h3><span class="tag">B</span>Download straight on the server</h3>
-      <p>If the server can reach the internet, run this on it:</p>
+      <h3><span class="tag">B</span>Download on the server (needs internet)</h3>
       <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.5.sh
 U=https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5
 curl -fL -O $U/$F -O $U/$F.sig -O $U/fc.pub</code></pre></div>
-      <p>Only if you want the optional full release package on its own as well:</p>
-      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>U=https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.5
-curl -fL -O $U/forge-stack-0.1.5.tar -O $U/forge-stack-0.1.5.tar.sig</code></pre></div>
     </div>
   </section>
 
   <section>
-    <h2><span class="num">2</span>Check the signature</h2>
-    <p>On the server, in the folder with the three files:</p>
+    <h2><span class="num">2</span>Check the signature <span class="optional">optional</span></h2>
+    <p>Recommended. In the folder with the files:</p>
     <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.5.sh
 base64 -d $F.sig &gt; forge-install.sig
 openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre></div>
-    <p>It must print <code>Verified OK</code>. If it prints anything else, stop and contact us: the file is damaged or is not from Forge.</p>
-    <p>If you downloaded the optional full release package, check it the same way:</p>
-    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>P=forge-stack-0.1.5.tar
-base64 -d $P.sig &gt; forge-stack.sig
-openssl dgst -sha256 -verify fc.pub -signature forge-stack.sig $P</code></pre></div>
+    <p>It must print <code>Verified OK</code>. If not, contact us. Check the optional release package the same way.</p>
   </section>
 
   <section>
     <h2><span class="num">3</span>Run the installer</h2>
     <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.5.sh</code></pre></div>
-    <p>If you are logged in as root, leave out <code>sudo</code> here and in every command below.</p>
-    <p>It first checks the server and lists anything missing, with the fix. Then it asks:</p>
+    <p>It checks the server, then asks:</p>
     <ol class="asks">
-      <li><strong>The first admin's username and password</strong> (at least 14 characters).</li>
-      <li><strong>Do you have your own certificate?</strong> Answer <code>n</code> and Forge creates one. It then shows the names and IPs it found; add any other name or IP your apps use to reach this server, such as a public IP or DNS name.</li>
-      <li><strong>Optional setup</strong>: a model, your private CA, Bitwarden. Press Enter to skip them; you can add each one later.
-        <span class="sub">For a model Forge runs with Ollama it asks for the Ollama image, the folder that holds the GGUF file and its <code>Modelfile</code> (whose <code>FROM</code> line names the GGUF file), and the model's context window; press Enter to keep the default.</span></li>
+      <li><strong>Admin username and password</strong> (14+ characters)</li>
+      <li><strong>Your own certificate?</strong> Answer <code>n</code> and Forge creates one. Add any other name or IP apps use, such as a public IP.</li>
+      <li><strong>Optional setup:</strong> model, private CA, Bitwarden. Press Enter to skip.</li>
     </ol>
-    <div class="tip">If you connect a model server you already run, the installer calls it from the server and from inside Forge before saving anything, and tells you what to fix if it cannot reach it. A server on the same machine must listen on <code>0.0.0.0</code>, not only on <code>127.0.0.1</code>.</div>
+    <div class="tip">Using a model server you already run? It must listen on <code>0.0.0.0</code>, not only <code>127.0.0.1</code>. The installer tests it before saving.</div>
   </section>
 
   <section>
     <h2><span class="num">4</span>Open Forge</h2>
-    <p>At the end the installer prints the addresses for your server. They look like this:</p>
+    <p>The installer ends by printing your addresses:</p>
     <div class="table-wrap"><table>
       <tr><th>What</th><th>Address</th><th>Sign in with</th></tr>
-      <tr><td>Control Station</td><td class="addr"><code>http://&lt;server&gt;:8084/</code></td><td>The admin you just created</td></tr>
-      <tr><td>Chat API for apps (OpenAI-compatible)</td><td class="addr"><code>https://&lt;server&gt;:8080/v1</code></td><td>The API key, sent as <code>X-API-Key: &lt;key&gt;</code> or <code>Authorization: Bearer &lt;key&gt;</code>. Show it with <code>sudo cat /opt/forge/stack/secrets/orch-api.key</code></td></tr>
-      <tr><td>MCP clients</td><td class="addr"><code>http://&lt;server&gt;:8081/mcp</code></td><td>The MCP token, sent as <code>Authorization: Bearer &lt;token&gt;</code>. Show it with <code>sudo cat /opt/forge/stack/secrets/mcp.token</code></td></tr>
+      <tr><td>Control Station</td><td class="addr"><code>http://&lt;server&gt;:8084/</code></td><td>The admin you created</td></tr>
+      <tr><td>Chat API (OpenAI-compatible, model <code>accurate</code>)</td><td class="addr"><code>https://&lt;server&gt;:8080/v1</code></td><td>API key: <code class="path">sudo cat /opt/forge/<wbr>stack/<wbr>secrets/<wbr>orch-api.key</code></td></tr>
+      <tr><td>MCP clients</td><td class="addr"><code>http://&lt;server&gt;:8081/mcp</code></td><td>Bearer token: <code class="path">sudo cat /opt/forge/<wbr>stack/<wbr>secrets/<wbr>mcp.token</code></td></tr>
     </table></div>
-    <p>Apps ask for the model <code>accurate</code>. With the certificate Forge created, give them the file <code>/opt/forge/stack/certs/forge-ca.pem</code> so they trust the chat API.</p>
-    <div class="note">The Control Station (8084) and MCP Server (8081) use plain HTTP. Reach them only over your internal network or VPN.</div>
+    <p>Give apps <code>/opt/forge/stack/certs/forge-ca.pem</code> so they trust the chat API.</p>
+    <div class="note">Ports 8084 and 8081 use plain HTTP. Keep them on your internal network.</div>
   </section>
 
   <section id="first-tool">
     <h2><span class="num">5</span>Publish your first tool</h2>
-    <p>A tool is one operation of one of your APIs, which Forge's chat and your MCP clients can then call.</p>
     <ol class="asks">
-      <li><strong>Store the API's token</strong>, if it needs one. The Control Station never takes the token itself, only a reference to it. On the server:
+      <li><strong>Store the API's token</strong> (if it has one):
         <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo forge secret add inventory-token</code></pre></div>
-        It asks for the value (hidden) and prints the reference to use, here <code>file:/secrets/inventory-token</code>.</li>
-      <li><strong>Add the API.</strong> In the Control Station open <strong>MCP Server → APIs → Add API</strong>:
-        <span class="sub">Name: 3 to 64 lowercase letters, digits, <code>-</code> or <code>_</code>, for example <code>inventory</code>.</span>
-        <span class="sub">Base URL: the API's address as the Forge server reaches it, a name or IP on your network. Never <code>localhost</code> or <code>127.0.0.1</code>: those point inside Forge. For an API on the Forge server itself use <code>host.docker.internal</code>, and make the API listen on <code>0.0.0.0</code>.</span>
-        <span class="sub">Turn on <strong>Allow HTTP</strong> if the address starts with <code>http://</code>.</span>
-        <span class="sub">Auth type: how the API expects the token (<code>bearer</code> or <code>api_key</code>), with the reference from step 1 in <strong>Token ref</strong>.</span>
-        Save, then <strong>Test connection</strong>. It checks that the address answers (any HTTP status, even 404, passes); the token is checked when you test a tool. If it fails, check the base URL can be reached from the Forge server.</li>
-      <li><strong>Import its operations.</strong> Open <strong>Import OpenAPI</strong>, pick the API, choose its OpenAPI file (JSON or YAML), then <strong>Preview operations</strong>, select the ones you want and click <strong>Import</strong>. They become draft tools, named after each operation's <code>operationId</code>; tool names are unique across all APIs, so an operation whose name is already taken is skipped.</li>
-      <li><strong>Test and publish.</strong> Open <strong>Tools</strong>, pick one and run <strong>Test</strong>. For a tool that changes data, first tick the box confirming the test calls the real API. Then click <strong>Publish</strong>, add a comment and confirm. The tool is now live for the chat API and for MCP clients.
-        <span class="sub">Forge's chat asks the user to confirm before a tool that changes data runs. MCP clients can run such tools only if they support that confirmation (MCP 2026-07-28); others can run read tools.</span></li>
+        It prints a reference like <code>file:/secrets/inventory-token</code>.</li>
+      <li><strong>Add the API:</strong> in the Control Station, <strong>MCP Server → APIs → Add API</strong>.
+        <span class="sub">Base URL: the API's address on your network, not <code>localhost</code>. For an API on this server, use <code>host.docker.internal</code>.</span>
+        <span class="sub">Turn on <strong>Allow HTTP</strong> for <code>http://</code> addresses. Put the reference in <strong>Token ref</strong>.</span>
+        <span class="sub">Save, then <strong>Test connection</strong>.</span></li>
+      <li><strong>Import:</strong> <strong>Import OpenAPI</strong> → pick the API → choose the file → <strong>Preview operations</strong> → <strong>Import</strong>.</li>
+      <li><strong>Publish:</strong> <strong>Tools</strong> → pick a tool → <strong>Test</strong> → <strong>Publish</strong>.</li>
     </ol>
-  </section>
-
-  <section id="package">
-    <h2>The full release package</h2>
-    <p>The installer also saves the complete signed release to <code>/opt/forge/release/forge-stack-0.1.5.tar</code>: source code, SBOMs, vulnerability scan reports with their database, Helm charts, the command-line programs and the chat widget for your own apps. Forge does not need it to run; keep it for your records and security reviews. To look inside:</p>
-    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>mkdir -p ~/forge-release &amp;&amp; tar -xf /opt/forge/release/forge-stack-0.1.5.tar -C ~/forge-release
-cat ~/forge-release/forge-stack-0.1.5/IMPORT.md</code></pre></div>
-    <p>It is the same file as the optional download <code>forge-stack-0.1.5.tar</code>. To verify the package and each product inside it, run sections 1 and 2 of <code>IMPORT.md</code> from <code>~/forge-release</code>, with <code>KEY</code> set to the <code>fc.pub</code> you downloaded in step 1. Its install-by-hand sections are not needed on a server set up with the installer.</p>
   </section>
 
   <section id="later">
     <h2>Later</h2>
     <div class="table-wrap"><table>
       <tr><th>To</th><th>Run</th></tr>
-      <tr><td>See what runs and how to reach it</td><td><code>sudo forge status</code></td></tr>
-      <tr><td>Connect, change or remove the model</td><td><code>sudo forge setup model</code></td></tr>
+      <tr><td>Check status and addresses</td><td><code>sudo forge status</code></td></tr>
+      <tr><td>Add or change the model</td><td><code>sudo forge setup model</code></td></tr>
       <tr><td>Trust your private CA</td><td><code>sudo forge setup ca</code></td></tr>
       <tr><td>Change the certificate or its names</td><td><code>sudo forge setup https</code></td></tr>
-      <tr><td>Store, list or delete an API token</td><td><code>sudo forge secret add &lt;name&gt;</code>, <code>list</code>, <code>remove &lt;name&gt;</code></td></tr>
-      <tr><td>Use Bitwarden secrets (also needs a Node image and an npm mirror)</td><td><code>sudo forge setup bitwarden</code></td></tr>
-      <tr><td>Upgrade to a new version (it asks you to confirm; add <code>--yes</code> to skip)</td><td><code>sudo forge upgrade forge-install-&lt;version&gt;.sh</code></td></tr>
-      <tr><td>Remove Forge, keeping its data</td><td><code>sudo forge uninstall</code></td></tr>
-      <tr><td>Bring it back after that, with the same admin and keys</td><td><code>sudo sh forge-install-0.1.5.sh</code> (keep the installer file)</td></tr>
-      <tr><td>Remove Forge and delete all its data (after a plain uninstall, use <code>sudo /opt/forge/bin/forge uninstall --purge</code>)</td><td><code>sudo forge uninstall --purge</code></td></tr>
+      <tr><td>Manage API tokens</td><td><code>sudo forge secret add|list|remove</code></td></tr>
+      <tr><td>Use Bitwarden</td><td><code>sudo forge setup bitwarden</code></td></tr>
+      <tr><td>Upgrade</td><td><code>sudo forge upgrade forge-install-&lt;version&gt;.sh</code></td></tr>
+      <tr><td>Uninstall, keeping data</td><td><code>sudo forge uninstall</code></td></tr>
+      <tr><td>Reinstall after that</td><td><code>sudo sh forge-install-0.1.5.sh</code></td></tr>
+      <tr><td>Delete everything</td><td><code>sudo /opt/forge/bin/forge uninstall --purge</code></td></tr>
     </table></div>
-    <p>If another program on the server already uses the name <code>forge</code>, run <code>sudo /opt/forge/bin/forge</code> instead.</p>
   </section>
 
   <section id="help">
     <h2>If something goes wrong</h2>
-    <p>Fix what the installer reports and run the same command again. It keeps what it already set up and asks the questions again.</p>
-    <p>If you need us, run this and send us the file it names, <code>/var/tmp/forge-doctor-&lt;server&gt;-&lt;time&gt;.tar.gz</code>. It contains no keys or passwords. Only root can read it, so copy it with <code>sudo cp</code> first.</p>
+    <p>Fix what the installer reports and run it again. It keeps what it already set up.</p>
+    <p>To get help, run this and send us the file it names. It holds no keys or passwords.</p>
     <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo forge doctor</code></pre></div>
-    <p>If the install stopped before Forge was set up, send <code>/var/log/forge-install.log</code> instead.</p>
   </section>
 
   <footer>Forge 0.1.5</footer>
