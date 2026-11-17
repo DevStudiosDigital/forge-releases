@@ -221,28 +221,28 @@ openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre>
 
   <section id="chat">
     <h2><span class="num">6</span>Add chat to your website <span class="optional">optional</span></h2>
-    <p>Forge already serves a chat window. One script tag adds it to any website, such as plain HTML, Angular or WordPress. Answers stream as they are written, and users see when a tool runs and approve tools that change data.</p>
+    <p>Forge serves a chat window. One script tag adds it to any website.</p>
     <ol class="asks">
-      <li><strong>Allow your website.</strong> Browsers can reach the chat API only from sites you list. On the server, set <code>O</code> to your site's address (<code>https://host</code> or <code>https://host:port</code>, no path), then run:
+      <li><strong>Allow your website.</strong> Set <code>O</code> to your site's address (no path), then run on the server:
         <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>O=https://intranet.example.com
 for f in /opt/forge/stack/config/orchestrator/orchestrator.*.yaml; do
   sudo grep -q '^cors:' "$f" || printf 'cors:\n  allowed_origins:\n' | sudo tee -a "$f" &gt;/dev/null
   sudo grep -qx "    - $O" "$f" || sudo sed -i "/^  allowed_origins:/a\    - $O" "$f"
 done
 sudo systemctl restart forge-stack</code></pre></div>
-        <span class="sub">Run it again for each extra site. Upgrades and <code>forge setup</code> keep the list.</span></li>
-      <li><strong>Make browsers trust the chat API.</strong> Your users' browsers must trust its certificate. Either install <code class="path">/opt/forge/<wbr>stack/<wbr>certs/<wbr>forge-ca.pem</code> on their computers (for example by group policy), or use a certificate they already trust: <code>sudo forge setup https</code>.</li>
-      <li><strong>Add the tag</strong> to your pages, with your server's address:
+        <span class="sub">Repeat for each site. Upgrades keep the list.</span></li>
+      <li><strong>Trust the certificate.</strong> Install <code class="path">/opt/forge/<wbr>stack/<wbr>certs/<wbr>forge-ca.pem</code> on your users' computers (for example by group policy), or use a certificate they already trust: <code>sudo forge setup https</code>.</li>
+      <li><strong>Add the tag</strong> to your pages:
         <div class="term"><div class="term-bar"><span>your website</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;script src="https://forge.example.com:8080/static/fc-chat.js"
   data-endpoint="https://forge.example.com:8080"
   data-token="API-KEY" defer&gt;&lt;/script&gt;</code></pre></div>
-        <span class="sub">Replace <code>API-KEY</code> with the chat API key (<code>sudo cat /opt/forge/stack/secrets/orch-api.key</code>). A chat button appears at the bottom right.</span>
-        <span class="sub">If the site has a Content Security Policy, add the Forge address to <code>script-src</code> and <code>connect-src</code>.</span></li>
+        <span class="sub">Replace <code>API-KEY</code> with the output of <code>sudo cat /opt/forge/stack/secrets/orch-api.key</code>.</span>
+        <span class="sub">With a Content Security Policy, add the Forge address to <code>script-src</code> and <code>connect-src</code>.</span></li>
     </ol>
-    <div class="note">Anyone who can open the page can read the API key in it and use the chat API. Put it only on pages that just your staff can open. For other pages, sign users in as shown below.</div>
+    <div class="note">Anyone who opens the page can read the API key. Use it only on staff-only pages, or sign users in with SSO.</div>
 
-    <h3>Sign users in with your SSO</h3>
-    <p>The chat then uses each user's own token, and their roles decide which tools they can use. In each file from step 1, replace the <code>auth:</code> block with your identity provider's details, then restart as in step 1:</p>
+    <h3>Sign users in with SSO</h3>
+    <p>Each user then gets only the tools their roles allow. In the files from step 1, replace the <code>auth:</code> block, then restart as in step 1:</p>
     <div class="term"><div class="term-bar"><span>orchestrator.*.yaml</span><button class="copy" type="button">Copy</button></div><pre><code>auth:
   mode: jwt
   jwt:
@@ -250,7 +250,7 @@ sudo systemctl restart forge-stack</code></pre></div>
     audience: forge
     jwks_url: https://sso.example.com/.well-known/jwks.json
     roles_claim: roles</code></pre></div>
-    <p>Then load the chat with a function that returns the signed-in user's token, instead of <code>data-token</code>:</p>
+    <p>Load the chat with the user's token instead of <code>data-token</code>:</p>
     <div class="term"><div class="term-bar"><span>your website</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;script src="https://forge.example.com:8080/static/fc-chat.js"&gt;&lt;/script&gt;
 &lt;script type="module"&gt;
   FCChat.mount({
@@ -258,22 +258,22 @@ sudo systemctl restart forge-stack</code></pre></div>
     token: () =&gt; myApp.getAccessToken()
   });
 &lt;/script&gt;</code></pre></div>
-    <div class="note">With SSO on, the API key stops working. Other apps that call the chat API must then send a user token too.</div>
+    <div class="note">With SSO on, the API key stops working, also for other apps.</div>
 
     <h3>More options</h3>
     <div class="table-wrap"><table>
       <tr><th>To</th><th>Add to the tag</th></tr>
-      <tr><td>Show the chat inside an element instead of as a button</td><td><code>data-target="#help"</code></td></tr>
+      <tr><td>Show it inside an element</td><td><code>data-target="#help"</code></td></tr>
       <tr><td>Set the title and first message</td><td><code>data-title="…"</code> <code>data-welcome-message="…"</code></td></tr>
       <tr><td>Use your brand colour</td><td><code>data-theme-primary="#0055aa"</code></td></tr>
     </table></div>
-    <p><strong>React apps</strong> can use the npm package instead. It is in the release package on the server. Publish it to your internal npm registry:</p>
+    <p><strong>React apps</strong> can use the npm package from the release package. Publish it to your npm registry:</p>
     <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>tar -xf /opt/forge/release/forge-stack-0.1.6.tar --strip-components=2 \
     forge-stack-0.1.6/products/forge-chat-0.1.0.tar
 tar -xf forge-chat-0.1.0.tar
 npm publish forge-chat-0.1.0/npm/forcecapacity-chat-0.1.0.tgz \
     --registry https://npm.example.com/</code></pre></div>
-    <p>Then run <code>npm install @forcecapacity/chat</code> in your app and add <code>&lt;ForceCapacityChat endpoint="https://forge.example.com:8080" token={getToken} /&gt;</code>. <code>forge-chat-0.1.0/IMPORT.md</code> has the details.</p>
+    <p>Then run <code>npm install @forcecapacity/chat</code> and add <code>&lt;ForceCapacityChat endpoint="https://forge.example.com:8080" token={getToken} /&gt;</code>. Details: <code>forge-chat-0.1.0/IMPORT.md</code>.</p>
   </section>
 
   <section id="later">
