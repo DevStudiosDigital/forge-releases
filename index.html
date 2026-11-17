@@ -92,6 +92,11 @@
   .note { background: rgba(245, 165, 36, 0.08); border: 1px solid rgba(245, 165, 36, 0.3); color: var(--warn-ink); }
   .tip { background: var(--blue-bg); border: 1px solid var(--blue-bd); color: var(--blue-fg); }
   .note code, .tip code { background: rgba(0, 0, 0, 0.3); }
+  .option { background: var(--inset); border: 1px solid var(--line-2); border-radius: 10px; padding: 14px 16px; margin: 14px 0 0; }
+  .option h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 14px; color: var(--fg); }
+  .option .dl { background: var(--code); }
+  .tag { flex: none; width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--accent); color: var(--accent);
+         display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
   ol.asks { padding-left: 20px; margin: 8px 0; color: var(--fg-soft); }
   ol.asks li { margin: 8px 0; padding-left: 4px; }
   ol.asks li::marker { color: var(--accent); font-weight: 600; }
@@ -114,7 +119,7 @@
 
   <section id="downloads">
     <h2>Downloads</h2>
-    <p>You need all three files. The installer needs no internet access once it is on your server.</p>
+    <p>You need all three files. Step 1 below shows how to get them onto your server. The installer needs no internet access once it is there.</p>
     <div class="downloads">
       <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.3/forge-install-0.1.3.sh"><strong>forge-install-0.1.3.sh</strong><span>The installer, about 38 MB</span></a>
       <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.3/forge-install-0.1.3.sh.sig"><strong>forge-install-0.1.3.sh.sig</strong><span>Its signature</span></a>
@@ -147,19 +152,35 @@
 
   <section id="install">
     <h2><span class="num">1</span>Put the files on the server</h2>
-    <p>If the server can reach the internet, download them there:</p>
-    <div class="term"><div class="term-bar"><span>shell</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.3.sh
+    <p>Use either way. Both end with the three files in one folder on the server.</p>
+
+    <div class="option">
+      <h3><span class="tag">A</span>Download in your browser, then copy to the server</h3>
+      <p>Click each file to save it to your computer:</p>
+      <div class="downloads">
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.3/forge-install-0.1.3.sh" download><strong>forge-install-0.1.3.sh</strong><span>Download</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.3/forge-install-0.1.3.sh.sig" download><strong>forge-install-0.1.3.sh.sig</strong><span>Download</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.3/fc.pub" download><strong>fc.pub</strong><span>Download</span></a>
+      </div>
+      <p>If the browser warns that a file is not commonly downloaded, choose <strong>Keep</strong>. Then copy the three files to the server with any file-transfer tool (WinSCP, FileZilla, Cyberduck), or from a terminal in your Downloads folder (macOS, Linux, and Windows PowerShell):</p>
+      <div class="term"><div class="term-bar"><span>your computer</span><button class="copy" type="button">Copy</button></div><pre><code>scp forge-install-0.1.3.sh forge-install-0.1.3.sh.sig fc.pub \
+    admin@your-server:</code></pre></div>
+      <p>Replace <code>admin@your-server</code> with your user and server. The files land in your home folder there.</p>
+    </div>
+
+    <div class="option">
+      <h3><span class="tag">B</span>Download straight on the server</h3>
+      <p>If the server can reach the internet, run this on it:</p>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.3.sh
 U=https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.3
 curl -fL -O $U/$F -O $U/$F.sig -O $U/fc.pub</code></pre></div>
-    <p>If it cannot, download the three files on your computer from the links above, then copy them over, for example:</p>
-    <div class="term"><div class="term-bar"><span>shell</span><button class="copy" type="button">Copy</button></div><pre><code>scp forge-install-0.1.3.sh forge-install-0.1.3.sh.sig fc.pub \
-    admin@your-server:</code></pre></div>
+    </div>
   </section>
 
   <section>
     <h2><span class="num">2</span>Check the signature</h2>
     <p>On the server, in the folder with the three files:</p>
-    <div class="term"><div class="term-bar"><span>shell</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.3.sh
+    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.3.sh
 base64 -d $F.sig &gt; forge-install.sig
 openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre></div>
     <p>It must print <code>Verified OK</code>. If it prints anything else, stop and contact us: the file is damaged or is not from Forge.</p>
@@ -167,7 +188,7 @@ openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre>
 
   <section>
     <h2><span class="num">3</span>Run the installer</h2>
-    <div class="term"><div class="term-bar"><span>shell</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.3.sh</code></pre></div>
+    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.3.sh</code></pre></div>
     <p>It first checks the server and lists anything missing, with the fix. Then it asks:</p>
     <ol class="asks">
       <li><strong>The first admin's username and password</strong> (at least 14 characters).</li>
@@ -210,7 +231,7 @@ openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre>
     <h2>If something goes wrong</h2>
     <p>Fix what the installer reports and run the same command again. It keeps what it already set up and asks the questions again.</p>
     <p>If you need us, send the file this command writes (it contains no keys or passwords):</p>
-    <div class="term"><div class="term-bar"><span>shell</span><button class="copy" type="button">Copy</button></div><pre><code>sudo forge doctor</code></pre></div>
+    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo forge doctor</code></pre></div>
     <p>If the install stopped before Forge was set up, send <code>/var/log/forge-install.log</code> instead.</p>
   </section>
 
