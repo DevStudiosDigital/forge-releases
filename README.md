@@ -2,10 +2,10 @@
 
 Install guide: https://devstudiosdigital.github.io/forge-releases/
 
-Downloads are on the [Releases](https://github.com/DevStudiosDigital/forge-releases/releases) page: the installer, the release package, their signatures and `fc.pub`, the Forge public key.
+Download `forge-install-<version>.sh` from the [Releases](https://github.com/DevStudiosDigital/forge-releases/releases) page, copy it to the server, and run `sudo sh forge-install-<version>.sh`. It needs no internet access.
 
 ## Example install
 
-A full install with all five files in one folder: checking the signature, the installer's questions, a model run by Forge with Ollama, and a first chat answer.
+A full install of Forge 0.1.7 on a rented Ubuntu 22.04 server with no internet access: the installer checks the server, asks for an admin and the model (Ollama with Gemma 3 1B, given as an image file and a model folder), starts Forge and checks that the model answers.
 
-![Example Forge install session](example-install.png)
+https://github.com/DevStudiosDigital/forge-releases/raw/main/forge-install-0.1.7.mp4
