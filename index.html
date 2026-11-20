@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>Install Forge 0.1.6</title>
-<meta name="description" content="Download and install Forge 0.1.6 on one Linux server with a single command.">
+<title>Install Forge 0.1.7</title>
+<meta name="description" content="Install Forge 0.1.7 with one file and one command.">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -102,6 +102,18 @@
   ol.asks { padding-left: 20px; margin: 8px 0; color: var(--fg-soft); }
   ol.asks li { margin: 8px 0; padding-left: 4px; }
   ol.asks li::marker { color: var(--accent); font-weight: 600; }
+  details { border-top: 1px solid var(--line); padding: 4px 0; }
+  details:first-of-type { margin-top: 10px; }
+  summary { cursor: pointer; padding: 10px 0; font-weight: 500; color: var(--fg); list-style: none; display: flex; align-items: center; gap: 10px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "+"; flex: none; width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--line-3); color: var(--accent);
+                    display: inline-flex; align-items: center; justify-content: center; font-size: 13px; }
+  details[open] > summary::before { content: "–"; }
+  details > *:not(summary) { margin-left: 30px; }
+  .summary-out { font: 12.5px/1.7 var(--mono); color: var(--fg-soft); white-space: pre; overflow-x: auto; background: var(--code);
+                 border: 1px solid var(--line-2); border-radius: 8px; padding: 14px 16px; margin: 12px 0; }
+  .summary-out b { color: var(--ok); font-weight: 500; }
+  .summary-out i { color: var(--accent); font-style: normal; }
   footer { color: var(--muted); font-size: 12px; text-align: center; margin-top: 28px; }
   @media (max-width: 560px) {
     main { padding-top: 28px; }
@@ -114,193 +126,95 @@
 <main>
   <header>
     <img class="logo" src="forge-logo.webp" alt="Forge" width="432" height="154">
-    <div class="eyebrow">VERSION 0.1.6</div>
-    <h1>Install Forge on your server</h1>
-    <p class="lead">A small installer and a signed release package set up Forge on a Linux server in a few minutes. The installer checks the package and the server before it changes anything.</p>
+    <div class="eyebrow">VERSION 0.1.7</div>
+    <h1>Install Forge</h1>
+    <p class="lead">One file. One command. No internet needed.</p>
   </header>
 
   <section id="requirements">
-    <h2>What the server needs</h2>
+    <h2>Server</h2>
     <ul class="check">
-      <li>Linux (amd64 or arm64) with systemd and <code>sudo</code></li>
-      <li>Docker with Compose v2, or Podman 5+ (on Ubuntu 22.04, use Docker)</li>
-      <li><code>openssl</code> and <code>curl</code></li>
-      <li>3 GB free in <code>/opt/forge</code>, 300 MB in <code>/var/tmp</code>, 1.5 GB of memory, plus what the model needs</li>
-      <li>A local ext4 or XFS disk (not NFS)</li>
-      <li>Ports 8080, 8081 and 8084 free and open to your network</li>
-      <li>Clock synced (NTP)</li>
-    </ul>
-    <h3>Optional, can be added later</h3>
-    <ul class="check opt">
-      <li><strong>A model</strong>, one of:
-        <span class="sub">Ollama image (<code>ollama/ollama:0.40.9</code>) and a folder with the GGUF file and its <code>Modelfile</code></span>
-        <span class="sub">vLLM image (<code>vllm/vllm-openai:v0.32.0</code>), a model folder and an NVIDIA GPU</span>
-        <span class="sub">The address of a model server you already run</span></li>
-      <li><strong>Your private CA</strong> file</li>
-      <li><strong>Your own certificate and key</strong> (otherwise Forge creates one)</li>
-      <li><strong>A Bitwarden or Vaultwarden server</strong></li>
+      <li>Linux (amd64 or arm64) with systemd</li>
+      <li>4 GB disk, 1.5 GB memory, plus the model</li>
+      <li>Ports 8080, 8081, 8084 free</li>
+      <li>Your model: Ollama, vLLM, or a server you run</li>
     </ul>
   </section>
 
-  <section id="install">
-    <h2><span class="num">1</span>Put the files on the server</h2>
+  <section id="file">
+    <h2><span class="num">1</span>Copy the file to the server</h2>
+    <div class="downloads">
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.7/forge-install-0.1.7.sh" download><strong>forge-install-0.1.7.sh</strong><span>970 MB</span></a>
+    </div>
+  </section>
 
-    <p>You need five files, in one folder on the server.</p>
+  <section id="run">
+    <h2><span class="num">2</span>Run it</h2>
+    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.7.sh</code></pre></div>
+    <p>It asks for an admin password and your model.</p>
+  </section>
 
-    <div class="option">
-      <h3><span class="tag">A</span>Download in your browser, then copy</h3>
+  <section id="result">
+    <h2><span class="num">3</span>Done</h2>
+<div class="table-wrap"><table>
+      <tr><td>Control Station</td><td><code>http://&lt;server&gt;:8084</code><span class="sub">your admin</span></td></tr>
+      <tr><td>Chat API</td><td><code>https://&lt;server&gt;:8080/v1</code><span class="sub">key: printed by the installer</span></td></tr>
+      <tr><td>MCP</td><td><code>http://&lt;server&gt;:8081/mcp</code><span class="sub">token: printed by the installer</span></td></tr>
+    </table></div>
+    <p>Next: sign in, then <strong>MCP Server → APIs → Add API</strong>.</p>
+    <div class="note">Ports 8084 and 8081 are plain HTTP. Keep them internal.</div>
+  </section>
+
+  <section id="advanced">
+    <h2>Advanced</h2>
+
+    <details>
+      <summary>Own certificate, private CA, Bitwarden, ports</summary>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.7.sh --advanced</code></pre></div>
+    </details>
+
+    <details>
+      <summary>Install without questions</summary>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sh forge-install-0.1.7.sh --print-answers &gt; answers
+sudo sh forge-install-0.1.7.sh --answers answers</code></pre></div>
+      <p>Fill in <code>answers</code> between the two commands.</p>
+    </details>
+
+    <details>
+      <summary>Chat on your website</summary>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo forge chat allow https://your-site
+sudo forge chat tag</code></pre></div>
+      <p>The second command prints the line for your pages.</p>
+      <div class="table-wrap"><table><tr><td>SSO sign-in</td><td><code>sudo forge chat sso</code></td></tr><tr><td>React npm package</td><td><code>sudo forge chat npm .</code></td></tr><tr><td>Test the model</td><td><code>sudo forge chat test</code></td></tr></table></div>
+    </details>
+
+    <details>
+      <summary>First tool</summary>
+      <ol class="asks">
+        <li>Store the API token: <code>sudo forge secret add &lt;name&gt;</code></li>
+        <li>Control Station: <strong>MCP Server → APIs → Add API</strong>, then <strong>Test connection</strong></li>
+        <li><strong>Import OpenAPI</strong> → <strong>Import</strong></li>
+        <li><strong>Tools</strong> → a tool → <strong>Test</strong> → <strong>Publish</strong></li>
+      </ol>
+    </details>
+
+    <details>
+      <summary>Verify the signature yourself</summary>
       <div class="downloads">
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/forge-install-0.1.6.sh" download><strong>forge-install-0.1.6.sh</strong><span>Installer</span></a>
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/forge-install-0.1.6.sh.sig" download><strong>forge-install-0.1.6.sh.sig</strong><span>Its signature</span></a>
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/forge-stack-0.1.6.tar" download><strong>forge-stack-0.1.6.tar</strong><span>Release package, about 830 MB</span></a>
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/forge-stack-0.1.6.tar.sig" download><strong>forge-stack-0.1.6.tar.sig</strong><span>Its signature</span></a>
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6/fc.pub" download><strong>fc.pub</strong><span>Forge public key</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.7/forge-install-0.1.7.sh.sig" download><strong>forge-install-0.1.7.sh.sig</strong><span>Signature</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.7/fc.pub" download><strong>fc.pub</strong><span>Public key</span></a>
       </div>
-      <p>If the browser warns, choose <strong>Keep</strong>. Copy the files to the server with WinSCP, FileZilla, or from a terminal in your Downloads folder:</p>
-      <div class="term"><div class="term-bar"><span>your computer</span><button class="copy" type="button">Copy</button></div><pre><code>scp forge-install-0.1.6.sh forge-install-0.1.6.sh.sig forge-stack-0.1.6.tar forge-stack-0.1.6.tar.sig fc.pub admin@your-server:</code></pre></div>
-      <p>Replace <code>admin@your-server</code> with your login.</p>
-    </div>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sh forge-install-0.1.7.sh --verify --key fc.pub</code></pre></div>
+      <p>Release package only: <code>sh forge-install-0.1.7.sh --extract &lt;folder&gt;</code></p>
+    </details>
 
-    <div class="option">
-      <h3><span class="tag">B</span>Download on the server (needs internet)</h3>
-      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>U=https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.6
-for f in forge-install-0.1.6.sh forge-install-0.1.6.sh.sig forge-stack-0.1.6.tar forge-stack-0.1.6.tar.sig fc.pub; do
-  curl -fL -O $U/$f
-done</code></pre></div>
-    </div>
+    <details>
+      <summary>Manage</summary>
+      <div class="table-wrap"><table><tr><td>Status</td><td><code>sudo forge status</code></td></tr><tr><td>Change model</td><td><code>sudo forge setup model</code></td></tr><tr><td>Upgrade</td><td><code>sudo forge upgrade &lt;new file&gt;</code></td></tr><tr><td>Uninstall</td><td><code>sudo forge uninstall</code></td></tr><tr><td>Support file</td><td><code>sudo forge doctor</code></td></tr><tr><td>All commands</td><td><code>sudo forge --help</code></td></tr></table></div>
+    </details>
   </section>
 
-  <section>
-    <h2><span class="num">2</span>Check the signature <span class="optional">optional</span></h2>
-    <p>Recommended. In the folder with the files:</p>
-    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>F=forge-install-0.1.6.sh
-base64 -d $F.sig &gt; forge-install.sig
-openssl dgst -sha256 -verify fc.pub -signature forge-install.sig $F</code></pre></div>
-    <p>It must print <code>Verified OK</code>. If not, contact us. The installer checks the release package's signature itself.</p>
-  </section>
-
-  <section>
-    <h2><span class="num">3</span>Run the installer</h2>
-    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.6.sh</code></pre></div>
-    <p>It checks the package's signature and the server, then asks the questions below. If the package is in another folder, it asks for its path.</p>
-    <ol class="asks">
-      <li><strong>Admin username and password</strong> (14+ characters)</li>
-      <li><strong>Your own certificate?</strong> Answer <code>n</code> and Forge creates one. Add any other name or IP apps use, such as a public IP.</li>
-      <li><strong>Optional setup:</strong> model, private CA, Bitwarden. Press Enter to skip.</li>
-    </ol>
-    <div class="tip">Using a model server you already run? It must listen on <code>0.0.0.0</code>, not only <code>127.0.0.1</code>. The installer tests it before saving.</div>
-  </section>
-
-  <section>
-    <h2><span class="num">4</span>Open Forge</h2>
-    <p>The installer ends by printing your addresses:</p>
-    <div class="table-wrap"><table>
-      <tr><th>What</th><th>Address</th><th>Sign in with</th></tr>
-      <tr><td>Control Station</td><td class="addr"><code>http://&lt;server&gt;:8084/</code></td><td>The admin you created</td></tr>
-      <tr><td>Chat API (OpenAI-compatible, model <code>accurate</code>)</td><td class="addr"><code>https://&lt;server&gt;:8080/v1</code></td><td>API key: <code class="path">sudo cat /opt/forge/<wbr>stack/<wbr>secrets/<wbr>orch-api.key</code></td></tr>
-      <tr><td>MCP clients</td><td class="addr"><code>http://&lt;server&gt;:8081/mcp</code></td><td>Bearer token: <code class="path">sudo cat /opt/forge/<wbr>stack/<wbr>secrets/<wbr>mcp.token</code></td></tr>
-    </table></div>
-    <p>Give apps <code>/opt/forge/stack/certs/forge-ca.pem</code> so they trust the chat API.</p>
-    <div class="note">Ports 8084 and 8081 use plain HTTP. Keep them on your internal network.</div>
-  </section>
-
-  <section id="first-tool">
-    <h2><span class="num">5</span>Publish your first tool</h2>
-    <ol class="asks">
-      <li><strong>Store the API's token</strong> (if it has one):
-        <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo forge secret add inventory-token</code></pre></div>
-        It prints a reference like <code>file:/secrets/inventory-token</code>.</li>
-      <li><strong>Add the API:</strong> in the Control Station, <strong>MCP Server → APIs → Add API</strong>.
-        <span class="sub">Base URL: the API's address on your network, not <code>localhost</code>. For an API on this server, use <code>host.docker.internal</code>.</span>
-        <span class="sub">Turn on <strong>Allow HTTP</strong> for <code>http://</code> addresses. Put the reference in <strong>Token ref</strong>.</span>
-        <span class="sub">Save, then <strong>Test connection</strong>.</span></li>
-      <li><strong>Import:</strong> <strong>Import OpenAPI</strong> → pick the API → choose the file → <strong>Preview operations</strong> → <strong>Import</strong>.</li>
-      <li><strong>Publish:</strong> <strong>Tools</strong> → pick a tool → <strong>Test</strong> → <strong>Publish</strong>.</li>
-    </ol>
-  </section>
-
-  <section id="chat">
-    <h2><span class="num">6</span>Add chat to your website <span class="optional">optional</span></h2>
-    <p>Forge serves a chat window. One script tag adds it to any website.</p>
-    <ol class="asks">
-      <li><strong>Allow your website.</strong> Set <code>O</code> to your site's address (no path), then run on the server:
-        <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>O=https://intranet.example.com
-for f in /opt/forge/stack/config/orchestrator/orchestrator.*.yaml; do
-  sudo grep -q '^cors:' "$f" || printf 'cors:\n  allowed_origins:\n' | sudo tee -a "$f" &gt;/dev/null
-  sudo grep -qx "    - $O" "$f" || sudo sed -i "/^  allowed_origins:/a\    - $O" "$f"
-done
-sudo systemctl restart forge-stack</code></pre></div>
-        <span class="sub">Repeat for each site. Upgrades keep the list.</span></li>
-      <li><strong>Trust the certificate.</strong> Install <code class="path">/opt/forge/<wbr>stack/<wbr>certs/<wbr>forge-ca.pem</code> on your users' computers (for example by group policy), or use a certificate they already trust: <code>sudo forge setup https</code>.</li>
-      <li><strong>Add the tag</strong> to your pages:
-        <div class="term"><div class="term-bar"><span>your website</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;script src="https://forge.example.com:8080/static/fc-chat.js"
-  data-endpoint="https://forge.example.com:8080"
-  data-token="API-KEY" defer&gt;&lt;/script&gt;</code></pre></div>
-        <span class="sub">Replace <code>API-KEY</code> with the output of <code>sudo cat /opt/forge/stack/secrets/orch-api.key</code>.</span>
-        <span class="sub">With a Content Security Policy, add the Forge address to <code>script-src</code> and <code>connect-src</code>.</span></li>
-    </ol>
-    <div class="note">Anyone who opens the page can read the API key. Use it only on staff-only pages, or sign users in with SSO.</div>
-
-    <h3>Sign users in with SSO</h3>
-    <p>Each user then gets only the tools their roles allow. In the files from step 1, replace the <code>auth:</code> block, then restart as in step 1:</p>
-    <div class="term"><div class="term-bar"><span>orchestrator.*.yaml</span><button class="copy" type="button">Copy</button></div><pre><code>auth:
-  mode: jwt
-  jwt:
-    issuer: https://sso.example.com
-    audience: forge
-    jwks_url: https://sso.example.com/.well-known/jwks.json
-    roles_claim: roles</code></pre></div>
-    <p>Load the chat with the user's token instead of <code>data-token</code>:</p>
-    <div class="term"><div class="term-bar"><span>your website</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;script src="https://forge.example.com:8080/static/fc-chat.js"&gt;&lt;/script&gt;
-&lt;script type="module"&gt;
-  FCChat.mount({
-    endpoint: "https://forge.example.com:8080",
-    token: () =&gt; myApp.getAccessToken()
-  });
-&lt;/script&gt;</code></pre></div>
-    <div class="note">With SSO on, the API key stops working, also for other apps.</div>
-
-    <h3>More options</h3>
-    <div class="table-wrap"><table>
-      <tr><th>To</th><th>Add to the tag</th></tr>
-      <tr><td>Show it inside an element</td><td><code>data-target="#help"</code></td></tr>
-      <tr><td>Set the title and first message</td><td><code>data-title="…"</code> <code>data-welcome-message="…"</code></td></tr>
-      <tr><td>Use your brand colour</td><td><code>data-theme-primary="#0055aa"</code></td></tr>
-    </table></div>
-    <p><strong>React apps</strong> can use the npm package from the release package. Publish it to your npm registry:</p>
-    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>tar -xf /opt/forge/release/forge-stack-0.1.6.tar --strip-components=2 \
-    forge-stack-0.1.6/products/forge-chat-0.1.0.tar
-tar -xf forge-chat-0.1.0.tar
-npm publish forge-chat-0.1.0/npm/forcecapacity-chat-0.1.0.tgz \
-    --registry https://npm.example.com/</code></pre></div>
-    <p>Then run <code>npm install @forcecapacity/chat</code> and add <code>&lt;ForceCapacityChat endpoint="https://forge.example.com:8080" token={getToken} /&gt;</code>. Details: <code>forge-chat-0.1.0/IMPORT.md</code>.</p>
-  </section>
-
-  <section id="later">
-    <h2>Later</h2>
-    <div class="table-wrap"><table>
-      <tr><th>To</th><th>Run</th></tr>
-      <tr><td>Check status and addresses</td><td><code>sudo forge status</code></td></tr>
-      <tr><td>Add or change the model</td><td><code>sudo forge setup model</code></td></tr>
-      <tr><td>Trust your private CA</td><td><code>sudo forge setup ca</code></td></tr>
-      <tr><td>Change the certificate or its names</td><td><code>sudo forge setup https</code></td></tr>
-      <tr><td>Manage API tokens</td><td><code>sudo forge secret add|list|remove</code></td></tr>
-      <tr><td>Use Bitwarden</td><td><code>sudo forge setup bitwarden</code></td></tr>
-      <tr><td>Upgrade</td><td><code>sudo forge upgrade forge-install-&lt;version&gt;.sh</code></td></tr>
-      <tr><td>Uninstall, keeping data</td><td><code>sudo forge uninstall</code></td></tr>
-      <tr><td>Reinstall after that</td><td><code>sudo sh forge-install-0.1.6.sh</code></td></tr>
-      <tr><td>Delete everything</td><td><code>sudo /opt/forge/bin/forge uninstall --purge</code></td></tr>
-    </table></div>
-  </section>
-
-  <section id="help">
-    <h2>If something goes wrong</h2>
-    <p>Fix what the installer reports and run it again. It keeps what it already set up.</p>
-    <p>To get help, run this and send us the file it names. It holds no keys or passwords.</p>
-    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo forge doctor</code></pre></div>
-  </section>
-
-  <footer>Forge 0.1.6</footer>
+  <footer>Forge 0.1.7</footer>
 </main>
 <script>
   document.querySelectorAll('.copy').forEach(function (button) {
