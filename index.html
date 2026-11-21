@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>Install Forge 0.1.7</title>
-<meta name="description" content="Install Forge 0.1.7 with one file and one command.">
+<title>Install Forge 0.1.8</title>
+<meta name="description" content="Install Forge 0.1.8 with one file and one command.">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -126,7 +126,7 @@
 <main>
   <header>
     <img class="logo" src="forge-logo.webp" alt="Forge" width="432" height="154">
-    <div class="eyebrow">VERSION 0.1.7</div>
+    <div class="eyebrow">VERSION 0.1.8</div>
     <h1>Install Forge</h1>
     <p class="lead">One file. One command. No internet needed.</p>
   </header>
@@ -138,20 +138,21 @@
       <li>4 GB disk, 1.5 GB memory, plus the model</li>
       <li>Ports 8080, 8081, 8084 free</li>
       <li>Your model: Ollama, vLLM, or a server you run</li>
+      <li>Nothing else to install first: the file brings Docker if the server has no Docker or Podman</li>
     </ul>
   </section>
 
   <section id="file">
     <h2><span class="num">1</span>Copy the file to the server</h2>
     <div class="downloads">
-      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.7/forge-install-0.1.7.sh" download><strong>forge-install-0.1.7.sh</strong><span>970 MB</span></a>
+      <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.8/forge-install-0.1.8.sh" download><strong>forge-install-0.1.8.sh</strong><span>1070 MB</span></a>
     </div>
   </section>
 
   <section id="run">
     <h2><span class="num">2</span>Run it</h2>
-    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.7.sh</code></pre></div>
-    <p>It asks for an admin password and your model.</p>
+    <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.8.sh</code></pre></div>
+    <p>It installs Docker if the server has no container engine, then asks for an admin password and your model.</p>
   </section>
 
   <section id="result">
@@ -170,13 +171,13 @@
 
     <details>
       <summary>Own certificate, private CA, Bitwarden, ports</summary>
-      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.7.sh --advanced</code></pre></div>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sudo sh forge-install-0.1.8.sh --advanced</code></pre></div>
     </details>
 
     <details>
       <summary>Install without questions</summary>
-      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sh forge-install-0.1.7.sh --print-answers &gt; answers
-sudo sh forge-install-0.1.7.sh --answers answers</code></pre></div>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sh forge-install-0.1.8.sh --print-answers &gt; answers
+sudo sh forge-install-0.1.8.sh --answers answers</code></pre></div>
       <p>Fill in <code>answers</code> between the two commands.</p>
     </details>
 
@@ -201,11 +202,11 @@ sudo forge chat tag</code></pre></div>
     <details>
       <summary>Verify the signature yourself</summary>
       <div class="downloads">
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.7/forge-install-0.1.7.sh.sig" download><strong>forge-install-0.1.7.sh.sig</strong><span>Signature</span></a>
-        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.7/fc.pub" download><strong>fc.pub</strong><span>Public key</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.8/forge-install-0.1.8.sh.sig" download><strong>forge-install-0.1.8.sh.sig</strong><span>Signature</span></a>
+        <a class="dl" href="https://github.com/DevStudiosDigital/forge-releases/releases/download/v0.1.8/fc.pub" download><strong>fc.pub</strong><span>Public key</span></a>
       </div>
-      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sh forge-install-0.1.7.sh --verify --key fc.pub</code></pre></div>
-      <p>Release package only: <code>sh forge-install-0.1.7.sh --extract &lt;folder&gt;</code></p>
+      <div class="term"><div class="term-bar"><span>server</span><button class="copy" type="button">Copy</button></div><pre><code>sh forge-install-0.1.8.sh --verify --key fc.pub</code></pre></div>
+      <p>Release package only: <code>sh forge-install-0.1.8.sh --extract &lt;folder&gt;</code></p>
     </details>
 
     <details>
@@ -214,7 +215,7 @@ sudo forge chat tag</code></pre></div>
     </details>
   </section>
 
-  <footer>Forge 0.1.7</footer>
+  <footer>Forge 0.1.8</footer>
 </main>
 <script>
   document.querySelectorAll('.copy').forEach(function (button) {
